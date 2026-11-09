@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ледовая сила на опору — СП 35.13330.2011</title>
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+        background: #f0f4f8;
+        color: #1a2b3c;
+        line-height: 1.5;
+        padding: 20px;
+        min-height: 100vh;
+    }
+
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    header {
+        background: linear-gradient(135deg, #1e3c5c 0%, #2a5a7a 100%);
+        color: #fff;
+        padding: 24px 28px;
+        border-radius: 16px;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    }
+    header h1 { font-size: 1.7rem; font-weight: 600; margin-bottom: 6px; }
+    header .subtitle { font-size: 0.95rem; opacity: 0.85; }
+    header .norm-ref {
+        display: inline-block;
+        background: rgba(255,255,255,0.18);
+        padding: 4px 14px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        margin-top: 10px;
+    }
+
+    .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 24px;
+    }
+    @media (max-width: 800px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    .card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 24px 28px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        border: 1px solid #e2e9f0;
+    }
+    .card h2 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #1e3c5c;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #eef3f8;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .card h2 .badge {
+        font-size: 0.7rem;
+        background: #e8f0fe;
+        color: #1e5a9e;
+        padding: 2px 10px;
+        border-radius: 12px;
+        font-weight: 500;
+    }
+
+    .field-group { margin-bottom: 18px; }
+    .field-group label {
+        display: block;
+        font-weight: 500;
+        font-size: 0.9rem;
+        color: #2c4a6a;
+        margin-bottom: 5px;
+    }
+    .field-group label .unit {
+        font-weight: 400;
+        color: #6b8aab;
+        font-size: 0.82rem;
+        margin-left: 4px;
+    }
+    .field-group input,
+    .field-group select {
+        width: 100%;
+        padding: 10px 14px;
+        border: 2px solid #dce5ee;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        background: #fafcfe;
+        color: #1a2b3c;
+    }
+    .field-group input:focus,
+    .field-group select:focus {
+        outline: none;
+        border-color: #2a7ab5;
+        box-shadow: 0 0 0 3px rgba(42,122,181,0.15);
+        background: #fff;
+    }
+    .field-group input.error-input,
+    .field-group select.error-input {
+        border-color: #d93025;
+        background: #fff5f5;
+    }
+    .field-group .hint { font-size: 0.78rem; color: #7a94ad; margin-top: 3px; }
+    .field-group .error-text {
+        font-size: 0.82rem;
+        color: #d93025;
+        margin-top: 4px;
+        font-weight: 500;
+        display: none;
+    }
+    .field-group .error-text.visible { display: block; }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px 28px;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .btn-primary {
+        background: linear-gradient(135deg, #1e5a9e, #2a7ab5);
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(30,90,158,0.3);
+    }
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #174a82, #22689c);
+        box-shadow: 0 6px 16px rgba(30,90,158,0.4);
+        transform: translateY(-1px);
+    }
+    .btn-success {
+        background: linear-gradient(135deg, #0d7a3e, #1a9e52);
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(13,122,62,0.3);
+    }
+    .btn-success:hover {
+        background: linear-gradient(135deg, #0a6532, #158a45);
+        box-shadow: 0 6px 16px rgba(13,122,62,0.4);
+    }
+    .btn-block { width: 100%; }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .result-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #eef3f8;
+    }
+    .result-row:last-child { border-bottom: none; }
+    .result-label { font-size: 0.9rem; color: #4a6a8a; }
+    .result-value {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #1e3c5c;
+        font-variant-numeric: tabular-nums;
+    }
+    .result-value .unit-small {
+        font-size: 0.8rem;
+        font-weight: 400;
+        color: #7a94ad;
+        margin-left: 4px;
+    }
+
+    .verdict {
+        margin-top: 20px;
+        padding: 18px 22px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .verdict.green { background: #e6f4ea; color: #0d7a3e; border: 2px solid #a8d5b8; }
+    .verdict.red { background: #fce8e6; color: #c5221f; border: 2px solid #f0b3b0; }
+    .verdict.neutral { background: #f0f4f8; color: #4a6a8a; border: 2px solid #dce5ee; }
+    .verdict .icon { font-size: 1.4rem; }
+
+    .placeholder-text { color: #9ab0c6; font-style: italic; text-align: center; padding: 40px 0; }
+
+    .save-status { margin-top: 12px; font-size: 0.85rem; text-align: center; min-height: 20px; }
+    .save-status.success { color: #0d7a3e; }
+    .save-status.error { color: #d93025; }
+
+    .info-note {
+        background: #fff9e6;
+        border-left: 4px solid #f5b800;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        color: #6b5a00;
+        margin-bottom: 18px;
+    }
+
+    footer { text-align: center; font-size: 0.8rem; color: #8aa2ba; padding: 20px 0 10px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+    <header>
+        <h1>🧊 Ледовая сила на опору моста</h1>
+        <div class="subtitle">Определение нормативной горизонтальной ледовой нагрузки от движущихся ледяных полей</div>
+        <div class="norm-ref">СП 35.13330.2011 «Мосты и трубы», п. 6.25, Приложение П (обязательное)</div>
+    </header>
+
+    <div class="grid-2">
+        <!-- ===== ИСХОДНЫЕ ДАННЫЕ ===== -->
+        <div class="card">
+            <h2>📥 Исходные данные <span class="badge">СП 35.13330.2011</span></h2>
+
+            <div class="info-note">
+                ⚠️ <strong>Ловушка:</strong> прочность льда нельзя брать произвольно.
+                Используйте данные натурных наблюдений (не менее 5 лет) или табличные значения по СП.
+            </div>
+
+            <div class="field-group">
+                <label>Ширина опоры на уровне действия льда <span class="unit">b, м</span></label>
+                <input type="number" id="inputB" step="0.01" min="0.01" placeholder="например, 2.5">
+                <div class="hint">Ширина передней грани опоры в зоне действия льда</div>
+                <div class="error-text" id="errorB"></div>
+            </div>
+
+            <div class="field-group">
+                <label>Расчётная толщина льда <span class="unit">t, м</span></label>
+                <input type="number" id="inputT" step="0.01" min="0.01" placeholder="например, 0.8">
+                <div class="hint">t = 0,8 · максимальная толщина льда за зимний период (1% обеспеченности)</div>
+                <div class="error-text" id="errorT"></div>
+            </div>
+
+            <div class="field-group">
+                <label>Скорость движения ледяного поля <span class="unit">v, м/с</span></label>
+                <input type="number" id="inputV" step="0.01" min="0.01" placeholder="например, 1.2">
+                <div class="hint">При отсутствии наблюдений — скорость течения воды</div>
+                <div class="error-text" id="errorV"></div>
+            </div>
+
+            <div class="field-group">
+                <label>Площадь ледяного поля <span class="unit">A, м²</span></label>
+                <input type="number" id="inputA" step="1" min="1" placeholder="например, 500">
+                <div class="hint">При отсутствии данных A = 1,75 · l² (l — длина пролёта)</div>
+                <div class="error-text" id="errorA"></div>
+            </div>
+
+            <div class="field-group">
+                <label>Район строительства (K<sub>n</sub>)</label>
+                <select id="inputRegion">
+                    <option value="1">I район — K<sub>n</sub> = 1,0</option>
+                    <option value="1.25">II район — K<sub>n</sub> = 1,25</option>
+                    <option value="1.75">III район — K<sub>n</sub> = 1,75</option>
+                    <option value="2">IV район — K<sub>n</sub> = 2,0</option>
+                </select>
+                <div class="hint">Для рек, вскрывающихся при отрицательной температуре, K<sub>n</sub> ≥ 2</div>
+                <div class="error-text" id="errorRegion"></div>
+            </div>
+
+            <div class="field-group">
+                <label>Сопротивление льда раздроблению <span class="unit">R<sub>zn</sub>, кПа</span></label>
+                <input type="number" id="inputRzn" step="1" min="1" placeholder="например, 441">
+                <div class="hint">
+                    <strong>Из СП (Табл. П.1) или по натурным данным!</strong>
+                    Для I района: 441 кПа (наивысший ледоход). Для остальных: R<sub>zn</sub> = K<sub>n</sub> · 441 кПа.
+                </div>
+                <div class="error-text" id="errorRzn"></div>
+            </div>
+
+            <div class="field-group">
+                <label>Форма носовой части опоры (в плане)</label>
+                <select id="inputShape">
+                    <option value="rect">Прямоугольная</option>
+                    <option value="poly">Многоугольная</option>
+                    <option value="tri45">Треугольная, 45°</option>
+                    <option value="tri60">Треугольная, 60°</option>
+                    <option value="tri75">Треугольная, 75°</option>
+                    <option value="tri90">Треугольная, 90°</option>
+                    <option value="tri120">Треугольная, 120°</option>
+                    <option value="tri150">Треугольная, 150°</option>
+                </select>
+                <div class="hint">Коэффициенты ψ₁ и ψ₂ — по Таблице П.2 СП 35.13330.2011</div>
+            </div>
+        </div>
+
+        <!-- ===== РЕЗУЛЬТАТЫ ===== -->
+        <div class="card">
+            <h2>📊 Результаты расчёта</h2>
+
+            <div id="resultPlaceholder" class="placeholder-text">
+                Введите исходные данные и нажмите «Рассчитать»
+            </div>
+
+            <div id="resultBlock" style="display:none;">
+                <div class="result-row">
+                    <span class="result-label">R<sub>zn</sub> (принято)</span>
+                    <span class="result-value" id="resRzn">—</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Коэффициент ψ₁</span>
+                    <span class="result-value" id="resPsi1">—</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Коэффициент ψ₂</span>
+                    <span class="result-value" id="resPsi2">—</span>
+                </div>
+                <hr style="border:none; border-top:2px solid #eef3f8; margin:14px 0;">
+                <div class="result-row">
+                    <span class="result-label">F₁ — при прорезании льда</span>
+                    <span class="result-value" id="resF1">—</span>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">F₂ — при остановке поля</span>
+                    <span class="result-value" id="resF2">—</span>
+                </div>
+                <hr style="border:none; border-top:2px solid #eef3f8; margin:14px 0;">
+                <div class="result-row" style="padding:14px 0;">
+                    <span class="result-label" style="font-weight:600; font-size:1rem;">
+                        F — нормативная ледовая нагрузка<br>
+                        <small style="font-weight:400; color:#7a94ad;">(наименьшее из F₁ и F₂)</small>
+                    </span>
+                    <span class="result-value" id="resF" style="font-size:1.5rem; color:#1e5a9e;">—</span>
+                </div>
+
+                <div id="verdictBlock" class="verdict neutral">
+                    <span class="icon">📋</span>
+                    <span id="verdictText">Ожидание расчёта...</span>
+                </div>
+
+                <div style="margin-top:14px; font-size:0.82rem; color:#7a94ad; text-align:center;">
+                    Точка приложения: ниже уровня воды на 0,3t = <span id="resApplyPoint">—</span> м
+                </div>
+            </div>
+
+            <div style="margin-top:24px; display:flex; gap:12px; flex-wrap:wrap;">
+                <button class="btn btn-primary btn-block" id="btnCalculate" onclick="calculate()">
+                    🧮 Рассчитать
+                </button>
+                <button class="btn btn-success btn-block" id="btnSave" onclick="saveToGoogleSheets()" disabled>
+                    💾 Сохранить в Google Sheets
+                </button>
+            </div>
+            <div class="save-status" id="saveStatus"></div>
+        </div>
+    </div>
+
+    <footer>Учебный проект «Инженерный помощник» · Вариант 06 · СП 35.13330.2011</footer>
+</div>
+
+<script>
+// =========================================================================
+// СПРАВОЧНЫЕ ДАННЫЕ (СП 35.13330.2011, Приложение П)
+// =========================================================================
+
+/** Базовое сопротивление льда раздроблению для I района, кПа */
+const RZ1_BASE = 441;
+
+/** Коэффициенты формы ψ1 и ψ2 по Таблице П.2 */
+const SHAPE_COEFFICIENTS = {
+    rect:   { psi1: 1.00, psi2: 2.70 },
+    poly:   { psi1: 0.90, psi2: 2.40 },
+    tri45:  { psi1: 0.54, psi2: 0.20 },
+    tri60:  { psi1: 0.59, psi2: 0.50 },
+    tri75:  { psi1: 0.64, psi2: 0.80 },
+    tri90:  { psi1: 0.69, psi2: 1.00 },
+    tri120: { psi1: 0.77, psi2: 1.30 },
+    tri150: { psi1: 0.77, psi2: 2.70 }
+};
+
+// =========================================================================
+// ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+// =========================================================================
+
+/** Получение числа из поля ввода. NaN при пустом/нечисловом значении. */
+function getNumber(id) {
+    const el = document.getElementById(id);
+    const val = el.value.trim();
+    if (val === '') return NaN;
+    const num = Number(val);
+    return isNaN(num) ? NaN : num;
+}
+
+/** Показать/скрыть ошибку под полем. */
+function setError(inputId, errorId, message) {
+    const input = document.getElementById(inputId);
+    const errorEl = document.getElementById(errorId);
+    if (message) {
+        input.classList.add('error-input');
+        errorEl.textContent = message;
+        errorEl.classList.add('visible');
+    } else {
+        input.classList.remove('error-input');
+        errorEl.textContent = '';
+        errorEl.classList.remove('visible');
+    }
+}
+
+/** Очистить все ошибки. */
+function clearAllErrors() {
+    [['inputB','errorB'],['inputT','errorT'],['inputV','errorV'],
+     ['inputA','errorA'],['inputRzn','errorRzn'],['inputRegion','errorRegion']]
+        .forEach(([inp, err]) => setError(inp, err, ''));
+}
+
+/** Форматирование числа (запятая, округление). */
+function fmt(num, digits = 2) {
+    if (isNaN(num) || !isFinite(num)) return '—';
+    return num.toFixed(digits).replace('.', ',');
+}
+
+// =========================================================================
+// РАСЧЁТ
+// =========================================================================
+
+function calculate() {
+    clearAllErrors();
+
+    const b = getNumber('inputB');
+    const t = getNumber('inputT');
+    const v = getNumber('inputV');
+    const A = getNumber('inputA');
+    const Kn = parseFloat(document.getElementById('inputRegion').value);
+    const RznInput = getNumber('inputRzn');
+    const shapeKey = document.getElementById('inputShape').value;
+
+    let hasError = false;
+
+    // --- Валидация ---
+    if (isNaN(b) || b <= 0) {
+        setError('inputB', 'errorB', 'Введите положительное число (b > 0)');
+        hasError = true;
+    } else if (b > 50) {
+        setError('inputB', 'errorB', 'Слишком большая ширина — проверьте единицы (должны быть метры)');
+        hasError = true;
+    }
+
+    if (isNaN(t) || t <= 0) {
+        setError('inputT', 'errorT', 'Введите положительное число (t > 0)');
+        hasError = true;
+    } else if (t > 5) {
+        setError('inputT', 'errorT', 'Толщина более 5 м — проверьте единицы (должны быть метры)');
+        hasError = true;
+    }
+
+    if (isNaN(v) || v <= 0) {
+        setError('inputV', 'errorV', 'Введите положительное число (v > 0)');
+        hasError = true;
+    } else if (v > 10) {
+        setError('inputV', 'errorV', 'Скорость более 10 м/с — проверьте данные');
+        hasError = true;
+    }
+
+    if (isNaN(A) || A <= 0) {
+        setError('inputA', 'errorA', 'Введите положительное число (A > 0)');
+        hasError = true;
+    } else if (A > 1e7) {
+        setError('inputA', 'errorA', 'Слишком большая площадь — проверьте единицы (м²)');
+        hasError = true;
+    }
+
+    if (isNaN(RznInput) || RznInput <= 0) {
+        setError('inputRzn', 'errorRzn', 'Введите Rzn > 0. Значение из СП или по натурным данным!');
+        hasError = true;
+    } else {
+        // Защита от «ловушки»: предупреждаем, если значение сильно отличается от табличного
+        const expectedForRegion = Kn * RZ1_BASE;
+        const tolerance = expectedForRegion * 0.5;
+        if (Math.abs(RznInput - expectedForRegion) > tolerance &&
+            Math.abs(RznInput - 735) > tolerance &&
+            Math.abs(RznInput - 441) > tolerance) {
+            setError('inputRzn', 'errorRzn',
+                'Значение сильно отличается от табличного. Укажите обоснование (натурные данные) или значение из СП.');
+            hasError = true;
+        }
+    }
+
+    if (isNaN(Kn) || Kn < 1) {
+        setError('inputRegion', 'errorRegion', 'Выберите район строительства');
+        hasError = true;
+    }
+
+    if (hasError) {
+        document.getElementById('resultBlock').style.display = 'none';
+        document.getElementById('resultPlaceholder').style.display = 'block';
+        document.getElementById('btnSave').disabled = true;
+        return;
+    }
+
+    // --- Расчёт (все в СИ: м, кПа, м/с, м²) ---
+    const Rzn = RznInput;
+    const shape = SHAPE_COEFFICIENTS[shapeKey] || SHAPE_COEFFICIENTS.rect;
+    const psi1 = shape.psi1;
+    const psi2 = shape.psi2;
+
+    // F1 = ψ1 · Rzn · b · t  [кН]
+    const F1 = psi1 * Rzn * b * t;
+
+    // F2 = 1,253 · v · t · √(ψ2 · A · Rzn)  [кН]
+    const F2 = 1.253 * v * t * Math.sqrt(psi2 * A * Rzn);
+
+    // Нормативная нагрузка — наименьшее из F1 и F2
+    const F = Math.min(F1, F2);
+
+    // Точка приложения — ниже уровня воды на 0,3t
+    const applyPoint = 0.3 * t;
+
+    // --- Вывод ---
+    document.getElementById('resRzn').innerHTML = `${fmt(Rzn, 0)} <span class="unit-small">кПа</span>`;
+    document.getElementById('resPsi1').textContent = psi1.toFixed(2).replace('.', ',');
+    document.getElementById('resPsi2').textContent = psi2.toFixed(2).replace('.', ',');
+    document.getElementById('resF1').innerHTML = `${fmt(F1, 1)} <span class="unit-small">кН</span>`;
+    document.getElementById('resF2').innerHTML = `${fmt(F2, 1)} <span class="unit-small">кН</span>`;
+    document.getElementById('resF').innerHTML = `${fmt(F, 1)} <span class="unit-small">кН</span>`;
+    document.getElementById('resApplyPoint').textContent = fmt(applyPoint, 2);
+
+    const verdictBlock = document.getElementById('verdictBlock');
+    const verdictText = document.getElementById('verdictText');
+
+    if (F > 10000) {
+        verdictBlock.className = 'verdict red';
+        verdictBlock.querySelector('.icon').textContent = '⚠️';
+        verdictText.innerHTML = `Ледовая нагрузка <strong>${fmt(F, 0)} кН</strong> очень велика. Требуется увеличить сечение опоры и проверить фундамент.`;
+    } else if (F > 5000) {
+        verdictBlock.className = 'verdict red';
+        verdictBlock.querySelector('.icon').textContent = '⚠️';
+        verdictText.innerHTML = `Ледовая нагрузка <strong>${fmt(F, 0)} кН</strong> значительна. Требуется проверить прочность опоры на горизонтальную нагрузку.`;
+    } else {
+        verdictBlock.className = 'verdict green';
+        verdictBlock.querySelector('.icon').textContent = '✅';
+        verdictText.innerHTML = `Ледовая нагрузка <strong>${fmt(F, 0)} кН</strong> в допустимых пределах. Условие прочности типовой опоры обеспечено.`;
+    }
+
+    document.getElementById('resultPlaceholder').style.display = 'none';
+    document.getElementById('resultBlock').style.display = 'block';
+    document.getElementById('btnSave').disabled = false;
+
+    document.getElementById('saveStatus').textContent = '';
+    document.getElementById('saveStatus').className = 'save-status';
+}
+
+// =========================================================================
+// СОХРАНЕНИЕ В GOOGLE SHEETS
+// =========================================================================
+
+/**
+ * Отправляет данные в Google Sheets через Apps Script.
+ * ВАЖНО: вставьте сюда URL вашего опубликованного веб-приложения Apps Script.
+ */
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/ВАШ_ID/exec';
+
+function saveToGoogleSheets() {
+    const statusEl = document.getElementById('saveStatus');
+    const btnSave = document.getElementById('btnSave');
+
+    btnSave.disabled = true;
+    statusEl.textContent = 'Отправка данных...';
+    statusEl.className = 'save-status';
+
+    // Собираем данные
+    const data = {
+        variant: '06 — Ледовая сила на опору',
+        norm: 'СП 35.13330.2011, п. 6.25, Прил. П',
+        timestamp: new Date().toISOString(),
+        inputs: {
+            b_m: getNumber('inputB'),
+            t_m: getNumber('inputT'),
+            v_ms: getNumber('inputV'),
+            A_m2: getNumber('inputA'),
+            Kn: parseFloat(document.getElementById('inputRegion').value),
+            Rzn_kPa: getNumber('inputRzn'),
+            shape: document.getElementById('inputShape').value
+        },
+        results: {
+            psi1: document.getElementById('resPsi1').textContent,
+            psi2: document.getElementById('resPsi2').textContent,
+            F1_kN: document.getElementById('resF1').textContent,
+            F2_kN: document.getElementById('resF2').textContent,
+            F_kN: document.getElementById('resF').textContent,
+            applyPoint_m: document.getElementById('resApplyPoint').textContent,
+            verdict: document.getElementById('verdictText').textContent
+        }
+    };
+
+    fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors', // обход CORS для Apps Script
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(() => {
+        statusEl.textContent = '✅ Данные отправлены в Google Sheets';
+        statusEl.className = 'save-status success';
+        btnSave.disabled = false;
+    })
+    .catch(err => {
+        statusEl.textContent = '❌ Ошибка отправки: ' + err.message;
+        statusEl.className = 'save-status error';
+        btnSave.disabled = false;
+    });
+}
+</script>
+</body>
+</html>
